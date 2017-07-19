@@ -3,7 +3,12 @@ clf
 clc
 world = -1;
 while isequal(world,-1);
-    filename = input('Enter the name of the .dat file containing the environment vertices: ', 's');
+    fprintf('\nList of valid environment files:\n\n')
+    fList = ls('*.dat');
+    for i = 1:numel(fList(:,1))
+        disp(fList(i,:))
+    end
+    filename = input('\nEnter the name of the file to use: ', 's');
     world = create_environment(filename);drawnow;
 end
 %% Conservative Lines
