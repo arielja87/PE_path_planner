@@ -9,6 +9,6 @@ function intPoints = findInteriorPoints(world)
             n = n+1;            
         end
     end
-    intPoints = round(intPoints,4);
+    intPoints = round(intPoints,5);
     intPoints = unique(intPoints, 'rows');
 end

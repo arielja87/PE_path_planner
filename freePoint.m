@@ -1,4 +1,6 @@
 function out = freePoint(p, regions)
+flag1 = false(numel(regions),1);
+flag2 = false(numel(regions),1);
 for i = 1:numel(regions)
     flag1(i) = inpolygon(p(1,1), p(1,2), regions{i}(:,1), regions{i}(:,2));
 end

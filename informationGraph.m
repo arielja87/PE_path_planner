@@ -12,19 +12,21 @@ igraph = struct('neighbors', [], 'neighborsCost', [], 'g', [], 'backpointer', []
 igraph(1) = [];
 
 %% first loop: initialize information graph
+
+intPoints = findInteriorPoints(world);
 for g = 1:numel(graph)
     %Obtain the visibility polygon for current graph node
     vp = visibility_polygon( [graph(g).x(1) graph(g).x(2)] , {world.vertices} , epsilon , snap_distance );
-    vp = round(vp,4);
 %     h = patch( vp(:,1) , vp(:,2) , 0.1*ones( size(vp,1) , 1 ) , ...
 %            'r' , 'linewidth' , 1.5, 'FaceColor' , [.65 1 .65], 'faceAlpha', .5);
 
     %Get edges from visibility polygon
     vpEdges = makeEdges(vp);
-    
+%     vpEdges{:}
     %Determine which edges are gap edges and count them
     gapEdges = findGapEdges(vpEdges, graph(g).x, world);
     nGaps = numel(gapEdges);
+%     gapEdges{:}
     
     %Create a node in the information graph for every possible combination
     %of gap edges, b vector
@@ -46,7 +48,6 @@ for g = 1:numel(graph)
     %check the transitions between conservative regions. gv is a matrix of
     %points.
     
-    intPoints = findInteriorPoints(world);
     gv = findGapVertices(gapEdges, intPoints);
     [igraph(idx).gv] = deal(gv);    
     graph(g).gv = gv;
@@ -54,8 +55,8 @@ for g = 1:numel(graph)
     %Attach the index of the visibility graph to each superimposed node of
     %the information graph for reference
     [igraph(idx).i] = deal(g);    
-    
-%     pause(.1)
+%     
+%     pause(1)
 %     delete(h)
 end
 

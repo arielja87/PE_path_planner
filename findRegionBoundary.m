@@ -5,7 +5,8 @@ function regionBoundary = findRegionBoundary(edge, orientation, regionEdges)
 persistent firstEdge boundary %b
 if isempty(boundary)
     boundary = {edge};
-%     b = plot(edge(:,1), edge(:,2), 'color', [.5 0 1], 'linewidth', 2);
+%     v = edge(2,:) - edge(1,:);
+%     b = quiver(edge(1,1), edge(1,2), v(1), v(2), 'color', [.5 0 1], 'linewidth', 2);
 end
 if isempty(firstEdge)
     firstEdge = edge;
@@ -18,9 +19,9 @@ elseif round(edge(2,:),4) == round(firstEdge(1,:),4)
 end
 attachedEdges = findAttachedSegments(edge, regionEdges);
 nextEdge = chooseNextEdge(edge, orientation, attachedEdges);
-% % h = plot(nextEdge(:,1), nextEdge(:,2), 'color', 'g', 'linewidth', 2);
-% % pause(.5)
-% % delete(h)
+% h = plot(nextEdge(:,1), nextEdge(:,2), 'color', 'g', 'linewidth', 2);
+% pause(.2)
+% delete(h)
 boundary = [boundary {nextEdge}];
 regionBoundary = findRegionBoundary(nextEdge, orientation, regionEdges);
 end

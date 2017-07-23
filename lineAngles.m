@@ -3,6 +3,7 @@ function angles = lineAngles(lines)
 % corresponding to the line inputs
 
 v1 = [1 0 0];
+angles = zeros(numel(lines),1);
 for i = 1:numel(lines)
  
     v2 = [lines{i}(2,:) - lines{i}(1,:) 0];
@@ -12,5 +13,8 @@ for i = 1:numel(lines)
         angles(i) = -angles(i);
     end    
 end
-
+[r,~] = size(angles);
+if r > 1
+    angles = angles';
+end
 end

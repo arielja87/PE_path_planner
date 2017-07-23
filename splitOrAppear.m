@@ -20,7 +20,9 @@ vpEdges = makeEdges(vp);
 
 %Determine which edges are gaps
 gapEdges = findGapEdges(vpEdges, testPoint, world);
-gapEdges = orderGapEdges(gapEdges, graph(n).gv);    
+gapEdges = orderGapEdges(gapEdges, graph(n).gv);  
+
+% delete(h)
 % find the angles of the gap edges measured from the positive x-axis
 
 angles = lineAngles(gapEdges);

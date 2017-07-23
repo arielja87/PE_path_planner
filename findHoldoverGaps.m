@@ -12,14 +12,12 @@ testPoint = crossPoint + crossDir*.001;
 
 %find visibility polygon at test point
 vp = visibility_polygon(testPoint, {world.vertices}, epsilon, snap_distance);
-
 %Get edges from visibility polygon
 vpEdges = makeEdges(vp);
 
 %Determine which edges are gaps
 gapEdges = findGapEdges(vpEdges, testPoint, world);
-gapEdges = orderGapEdges(gapEdges, round(graph(n).gv,4));
-
+gapEdges = orderGapEdges(gapEdges, graph(n).gv);
 % find the angles of the gap edges measured from the positive x-axis
 childAngles = lineAngles(gapEdges);
 
@@ -33,14 +31,20 @@ newTestPoint = crossPoint - crossDir*.001;
 vp = visibility_polygon(newTestPoint, {world.vertices}, epsilon, snap_distance);
 vpEdges = makeEdges(vp);
 gapEdges = findGapEdges(vpEdges, newTestPoint, world);
-gapEdges = orderGapEdges(gapEdges, round(graph(g).gv,4));
+gapEdges = orderGapEdges(gapEdges, graph(g).gv);
 parentAngles = lineAngles(gapEdges);
 
+% g
+% n
+% graph(g).gv
+% graph(n).gv
+% childAngles
+% parentAngles
 holdoverGaps = zeros(1,numel(childAngles));
 for i = 1:length(childAngles)
     for j = 1:length(parentAngles)
         d = abs(childAngles(i) - parentAngles(j));
-        if d < holdoverThreshhold || 360 - d < holdoverThreshhold
+        if d < holdoverThreshhold || (360 - d < holdoverThreshhold)
             holdoverGaps(i) = j;
             break
         end

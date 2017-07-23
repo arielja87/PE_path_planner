@@ -10,7 +10,7 @@ edgeQueue = [regionEdges regionEdges(in)];
 regions = {};
 while ~isempty(edgeQueue)
     % take the first edge in the list and find out which side of it is free
-    % space
+    % spacezz
     orientation = checkOrientation(edgeQueue{1}, regions, world);
     regionBoundary = findRegionBoundary(edgeQueue{1}, orientation, regionEdges);
     edgeQueue = removeRegionEdges(regionBoundary, edgeQueue);

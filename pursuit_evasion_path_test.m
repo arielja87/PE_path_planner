@@ -1,6 +1,8 @@
 %% Setup Environment
 clf
 clc
+clear all
+format compact
 world = -1;
 while isequal(world,-1);
     fprintf('\nList of valid environment files:\n\n')
@@ -9,6 +11,9 @@ while isequal(world,-1);
         disp(fList(i,:))
     end
     filename = input('\nEnter the name of the file to use: ', 's');
+    if isempty(strfind(filename, '.dat'))
+        filename = strcat(filename, '.dat');
+    end
     world = create_environment(filename);drawnow;
 end
 %% Conservative Lines
@@ -21,7 +26,6 @@ conservativeLines = make_conservativeLines(world);
     l = line(cLinesMat(:,1:2:end), cLinesMat(:,2:2:end), 'color', [.5 .5 1]);
 %% Conservative regions
 [regionEdges, in] = separateEdges(conservativeLines, world);
-% [regionEdges, in] = edgeInOn(regionEdges, world);
 regions = make_conservativeRegions(regionEdges, in, world);
 input('Press "Enter" to continue...')
 clc
@@ -59,7 +63,7 @@ while true
     vp = [];
     pathHandle = [];
     % Get user input for starting position
-    while ~ismember(gIdx, 1:numel(graph))
+    while ~any(ismember(gIdx, 1:numel(graph)))
         gIdx = input('\nEnter starting position: ');
     end
     disp('Searching for a shortest complete path...')

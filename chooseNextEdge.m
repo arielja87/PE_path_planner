@@ -7,7 +7,7 @@ else
     vEdge = [edge(2,:) - edge(1,:), 0];
     angle = zeros(numel(attachedEdges),1);
     for i = 1:numel(attachedEdges)
-%         r(i) = plot(attachedEdges{i}(:,1), attachedEdges{i}(:,2), 'color', 'r', 'linewidth', 2);pause(1) 
+%         r(i) = plot(attachedEdges{i}(:,1), attachedEdges{i}(:,2), 'color', 'r', 'linewidth', 2);pause(.2) 
         v = [attachedEdges{i}(2,:) - attachedEdges{i}(1,:), 0];
         k = cross(vEdge/norm(vEdge),v/norm(v));
         angle(i) = atan2d(norm(cross(vEdge,v)), dot(vEdge,v));
@@ -15,11 +15,12 @@ else
             angle(i) = -angle(i);
         end
     end
+%     pause(.5)
     if orientation < 0
         nextEdge = attachedEdges{angle == max(angle)};
     else
         nextEdge = attachedEdges{angle == min(angle)};
     end
-%         g(i) = plot(nextEdge(:,1), nextEdge(:,2), 'color', 'g', 'linewidth', 2);pause(1);delete(r);delete(g)
+%         g(i) = plot(nextEdge(:,1), nextEdge(:,2), 'color', 'g', 'linewidth', 2);pause(.2);delete(r);delete(g)
 end
 end

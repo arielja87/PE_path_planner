@@ -14,6 +14,6 @@ dists = pdist([los(1,:); xpoints]);
 dists = dists(:,1:length(xpoints(:,1)));
 [~, min_id] = min(dists);
 nearestPoint = xpoints(min_id,:);
-conservativeLine = [los(1,:) ; round(nearestPoint,4)];
+conservativeLine = [los(1,:) ; round(nearestPoint,5)];
 
 end
