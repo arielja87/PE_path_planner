@@ -1,7 +1,7 @@
 %% Setup Environment
 clf
 clc
-clear all
+clear
 format compact
 world = -1;
 while isequal(world,-1);
@@ -98,7 +98,7 @@ while true
         set(h, 'Visible', 'on');set(c, 'Visible', 'on');drawnow;
         key = input('\nPress "Enter" to choose a new starting location,\n"A" to animate the path again,\n"N" to load a new environment,\n"Q" to quit: ', 's');
         if strcmpi(key, 'n')
-            pursuit_evasion_path_test
+            PEpath
             return
         elseif strcmpi(key, 'q')
             clc;

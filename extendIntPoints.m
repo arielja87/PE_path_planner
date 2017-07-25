@@ -10,7 +10,9 @@ for i = 1:length(intPoints(:,1))
         if ~any(ismember(intPoints(j,:), worldLoop(iInVertices-1:iInVertices+1,:), 'rows'))
             los = [intPoints(i,:); intPoints(j,:)];
             %check if both sides of los are clear
-            [xi, yi] = polyxpoly(los(:,1), los(:,2), world.vertices(:,1), world.vertices(:,2));
+            intx = lineSegmentIntersect({los}, world.edges);
+            xi = intx.intMatrixX(intx.intAdjacencyMatrix)';
+            yi = intx.intMatrixY(intx.intAdjacencyMatrix)';
             mp = midpoints({los});
             if isempty(setdiff([xi yi], los, 'rows')) &&...
                     inpolygon(mp(1), mp(2), world.vertices(:,1), world.vertices(:,2)) &&...

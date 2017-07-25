@@ -1,4 +1,3 @@
-
 function out = lineSegmentIntersect(lines1,lines2)
 
 for i = 1:numel(lines1)
