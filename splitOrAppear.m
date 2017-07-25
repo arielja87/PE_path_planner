@@ -9,7 +9,7 @@ crossPoint = [x.intMatrixX(x.intAdjacencyMatrix) x.intMatrixY(x.intAdjacencyMatr
 
 % find a point just after the transistion to compare gap edge angles
 crossDir = (observerLine(2,:) - observerLine(1,:))/norm(observerLine(2,:) - observerLine(1,:));
-testPoint = crossPoint + crossDir*.001;
+testPoint = crossPoint + crossDir*.0001;
 
 %find visibility polygon at test point
 vp = visibility_polygon(testPoint, {world.vertices}, epsilon, snap_distance);
@@ -29,7 +29,7 @@ angles = lineAngles(gapEdges);
 
 % threshold angle (degrees) under which two gap edge angles are close
 % enough to consider them split
-splitThreshold = .5;
+splitThreshold = .1;
 m = dist(angles);
 locs = any(ismember(m,min(m(m>0 & m<splitThreshold))));
 if any(locs)
@@ -38,13 +38,16 @@ if any(locs)
     gapAngle = angles(childLogical);
     gapAngle = gapAngle(1);
     % repeat above process to find parent gap edge
-    newTestPoint = crossPoint - crossDir*.001;
+    newTestPoint = crossPoint - crossDir*.0001;
     vp = visibility_polygon(newTestPoint, {world.vertices}, epsilon, snap_distance);
     vpEdges = makeEdges(vp);
     gapEdges = findGapEdges(vpEdges, newTestPoint, world);
-    gapEdges = orderGapEdges(gapEdges, round(graph(g).gv,4));    
+    gapEdges = orderGapEdges(gapEdges, graph(g).gv);    
     parentAngles = lineAngles(gapEdges);
-    parentLogical = abs(parentAngles - gapAngle) < splitThreshold | 360 - abs(parentAngles - gapAngle) < splitThreshold;
+    d1 = abs(parentAngles - gapAngle);
+    d2 = 360 - abs(parentAngles - gapAngle);
+    d = min(d1,d2);
+    parentLogical = d == min(d);
     holdoverGaps = findHoldoverGaps(g, n, graph, world, epsilon, snap_distance);
     holdoverGaps(childLogical) = 0;
 else

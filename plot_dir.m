@@ -1,4 +1,4 @@
-function [h1, h2] = plot_dir (vX, vY)
+function [h1] = plot_dir (vX, vY)
 %function [h1, h2] = plot_dir (vX, vY)
 %Plotting x-y variables with direction indicating vector to the next element.
 %Example
@@ -27,13 +27,13 @@ vXQ1 = vX(vSelect1, 1);
 vYQ1 = vY(vSelect1, 1);
 
 % vector difference between heads & tails
-vPx = (vXQ1 - vXQ0)/norm(vXQ1 - vXQ0) * norm(vXQ1 - vXQ0) * rMag;
-vPy = (vYQ1 - vYQ0)/norm(vYQ1 - vYQ0) * norm(vYQ1 - vYQ0) * rMag;
+% vPx = (vXQ1 - vXQ0)/norm(vXQ1 - vXQ0) * norm(vXQ1 - vXQ0) * rMag;
+% vPy = (vYQ1 - vYQ0)/norm(vYQ1 - vYQ0) * norm(vYQ1 - vYQ0) * rMag;
 
 % make plot 
-h1 = plot (vX, vY, 'LineStyle', '--', 'Color', [.1 0 .9], 'LineWidth', 1); hold on;
+h1 = plot (vX, vY, 'LineStyle', '--', 'Color', [.1 0 .9], 'LineWidth', 2); hold on;
 % add arrows 
-for i = 1: length(vXQ0)
-    h2(i) = quiver (vXQ0(i),vYQ0(i), vPx(i), vPy(i), 1/norm([vPx(i), vPy(i)]), 'Color', [.1 0 .9], 'LineWidth', 1, 'MaxHeadSize', 1/norm([vPx(i) vPy(i)])); 
-end
+% for i = 1: length(vXQ0)
+%     h2(i) = quiver (vXQ0(i),vYQ0(i), vPx(i), vPy(i), 1/norm([vPx(i), vPy(i)]), 'Color', [.1 0 .9], 'LineWidth', 1, 'MaxHeadSize', 1/norm([vPx(i) vPy(i)])); 
+% end
 end

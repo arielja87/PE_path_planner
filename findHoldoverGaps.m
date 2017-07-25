@@ -8,7 +8,7 @@ crossPoint = [x.intMatrixX(x.intAdjacencyMatrix) x.intMatrixY(x.intAdjacencyMatr
 
 % find a point just after the transistion to compare gap edge angles
 crossDir = (observerLine(2,:) - observerLine(1,:))/norm(observerLine(2,:) - observerLine(1,:));
-testPoint = crossPoint + crossDir*.001;
+testPoint = crossPoint + crossDir*.0001;
 
 %find visibility polygon at test point
 vp = visibility_polygon(testPoint, {world.vertices}, epsilon, snap_distance);
@@ -24,10 +24,10 @@ childAngles = lineAngles(gapEdges);
 % threshold angle (degrees) under which two gap edge angles are close
 % enough to consider the new gap a holdover from the previous observation
 % point
-holdoverThreshhold = 1;
+holdoverThreshold = .4;
 
 % repeat above process for the parent observation point
-newTestPoint = crossPoint - crossDir*.001;
+newTestPoint = crossPoint - crossDir*.0001;
 vp = visibility_polygon(newTestPoint, {world.vertices}, epsilon, snap_distance);
 vpEdges = makeEdges(vp);
 gapEdges = findGapEdges(vpEdges, newTestPoint, world);
@@ -38,16 +38,17 @@ parentAngles = lineAngles(gapEdges);
 % n
 % graph(g).gv
 % graph(n).gv
-% childAngles
 % parentAngles
+% childAngles
 holdoverGaps = zeros(1,numel(childAngles));
 for i = 1:length(childAngles)
-    for j = 1:length(parentAngles)
-        d = abs(childAngles(i) - parentAngles(j));
-        if d < holdoverThreshhold || (360 - d < holdoverThreshhold)
-            holdoverGaps(i) = j;
-            break
-        end
+    d = abs(childAngles(i) - parentAngles);
+    d(360 - d < holdoverThreshold) = 360 - d(360 - d < holdoverThreshold);
+    if any(d < holdoverThreshold)
+        d(d >= holdoverThreshold) = inf;
+        [~, holdoverGaps(i)] = min(d);
+    else
+        holdoverGaps(i) = 0;
     end
-end  
+end
 end

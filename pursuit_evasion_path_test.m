@@ -52,48 +52,62 @@ clc
 delete(l)
 delete(p)
 %% Information graph
-fprintf(['Creating a directed information graph by examining the transitions between'...
-    ' conservative regions...\n'])
-t = plotIndeces(graph);
+disp(['Creating a directed information graph by examining the transitions between'...
+    ' conservative regions...'])
+% t = plotIndeces(graph);
 igraph = informationGraph(graph, world);
+fprintf('The superimposed directed information graph contains %d nodes.\n', numel(igraph))
 g = igraph(1).graph;
 %% Path generation
-gIdx = -1;
+x = [inf inf];
 while true
+    a_count = 0;
     vp = [];
     pathHandle = [];
+    key = 'a';
     % Get user input for starting position
-    while ~any(ismember(gIdx, 1:numel(graph)))
-        gIdx = input('\nEnter starting position: ');
+    while ~inpolygon(x(1), x(2), world.vertices(:,1), world.vertices(:,2))
+        disp('Use the mouse to select a starting position...')
+        x = ginput(1);
     end
     disp('Searching for a shortest complete path...')
+    if numel(igraph) > 2000
+        disp('This may take several minutes...')
+    elseif numel(igraph) > 1000 
+        disp('This may take about a minute')
+    end
+    gIdx = findNearestNode(x, g, world);
     idxStart = g(gIdx).ii(end);
-    s = plot(igraph(idxStart).x(1), igraph(idxStart).x(2), 'k.', 'markersize', 25);
-    set(t, 'Visible', 'off');set(c, 'Visible', 'off');drawnow;
+    s = plot(x(1), x(2), 'k.', 'markersize', 25);
+    set(c, 'Visible', 'off');drawnow;
     % Generate Path
     path = iSearch(igraph, idxStart);
-    if path == -1
-        disp('No complete path found. This environment requires additional pursuers.')
-        set(h, 'Visible', 'on');set(t, 'Visible', 'on');set(c, 'Visible', 'on');drawnow;        
-    else
-        pathHandle = plotPath(path, igraph);
-        pause(2)
-        set(h, 'Visible', 'off');drawnow;
-        delete(s);
-        vp = animate_path(igraph, path, world);
-        pause(2);
-        set(h, 'Visible', 'on');set(t, 'Visible', 'on');set(c, 'Visible', 'on');set(vp, 'Visible', 'off');drawnow;                
-    end
-    key = input('\nEnter a new starting location, press "N" to load a new environment, or "Q" to quit: ', 's');
-    if strcmpi(key, 'n')
-        pursuit_evasion_path_test
-    elseif strcmpi(key, 'q')
-        clc;
-        return
-    else
-        gIdx = str2double(key);
-    end
+    while strcmpi(key, 'a')
+        if path == -1
+            disp('No complete path found. This environment requires additional pursuers.')
+        else
+            pathHandle = plotPath(path, igraph, x);
+            if a_count == 0
+                pause(2)
+            end
+            set(h, 'Visible', 'off');set(c, 'Visible', 'off');drawnow;
+            delete(s);
+            vp = animate_path(igraph, path, world, x);
+            a_count = 1;
+        end
+        set(h, 'Visible', 'on');set(c, 'Visible', 'on');drawnow;
+        key = input('\nPress "Enter" to choose a new starting location,\n"A" to animate the path again,\n"N" to load a new environment,\n"Q" to quit: ', 's');
+        if strcmpi(key, 'n')
+            pursuit_evasion_path_test
+            return
+        elseif strcmpi(key, 'q')
+            clc;
+            return
+        elseif ~any(strcmpi(key, {'n', 'q', 'a'}))
+            delete(vp);delete(pathHandle);
+            x = ginput(1);
+        end
     delete(vp);delete(pathHandle);delete(s);
-    set(h, 'Visible', 'on');set(t, 'Visible', 'on');set(c, 'Visible', 'on');drawnow;
     clc
+    end
 end

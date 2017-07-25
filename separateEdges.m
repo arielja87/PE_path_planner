@@ -56,7 +56,7 @@ regionEdges =  regionEdges(logi);
 in = in(logi);
 [regionEdges, uid] = uniquecell(regionEdges);
 in = in(uid);
-logi = cell2mat(cellfun(@(x) isequal(x(1,:), x(2,:)), regionEdges, 'UniformOutput', false));
+logi = cell2mat(cellfun(@(x) isequal(round(x(1,:),4), round(x(2,:),4)), regionEdges, 'UniformOutput', false));
 regionEdges(logi) = [];
 in(logi) = [];
 end

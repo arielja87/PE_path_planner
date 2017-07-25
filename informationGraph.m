@@ -66,76 +66,10 @@ end
 % 3. two or more gap-edges merge into one, if any of them had a one label, assign a one to the new edge;
 % 4. a gap-edge divides into multiple gap-edges, assign the new edges the same label as the original;
 
-iList = 1:numel(igraph);
 for g = 1:numel(graph)
     for n = graph(g).neighbors;
-    % first scenario is trivial
-    
-        if length(graph(g).gv(:,1)) < length(graph(n).gv(:,1))
-            % Either a split has occured or a new gap edge appeared
-            % A split occured if the observer crossed a line between an old
-            % gap vertex and a new gap vertex
-            [found_split, parentLogical, childLogical, holdoverGaps] = splitOrAppear(g, n, graph, world, epsilon, snap_distance);
-            %get the list of current igraph nodes
-            if found_split
-                for ig =  iList([igraph.i] == g);
-                    for in =  iList([igraph.i] == n);
-                        if all(igraph(ig).b(parentLogical) == igraph(in).b(childLogical)) && isequal(igraph(ig).b(holdoverGaps(holdoverGaps > 0)), igraph(in).b(holdoverGaps > 0)); %Scenario #4
-                            igraph(ig).neighbors = [igraph(ig).neighbors in];
-                            igraph(ig).neighborsCost = [igraph(ig).neighborsCost graph(g).neighborsCost(graph(g).neighbors == n)];
-                        end
-                    end
-                end
-            else    %appearance occured
-                for ig =  iList([igraph.i] == g);
-                    for in =  iList([igraph.i] == n);
-                        if all(igraph(in).b(holdoverGaps == 0) == 0) && isequal(igraph(ig).b(holdoverGaps(holdoverGaps > 0)), igraph(in).b(holdoverGaps > 0)); %Scenario #2
-                            igraph(ig).neighbors = [igraph(ig).neighbors in];
-                            igraph(ig).neighborsCost = [igraph(ig).neighborsCost graph(g).neighborsCost(graph(g).neighbors == n)];
-                        end
-                    end
-                end                
-            end 
-        elseif length(graph(g).gv(:,1)) > length(graph(n).gv(:,1))
-            % Either two gap edges merged or one disappeared
-            [found_split, parentLogical, childLogical, ~] = splitOrAppear(n, g, graph, world, epsilon, snap_distance);
-            if found_split
-                % A split with the position order reversed is a merge
-                holdoverGaps = findHoldoverGaps(n, g, graph, world, epsilon, snap_distance);  
-                holdoverGaps(childLogical) = 0;
-                for ig =  iList([igraph.i] == g);
-                    for in =  iList([igraph.i] == n);
-                        if all(igraph(in).b(parentLogical) == max(igraph(ig).b(childLogical))) && isequal(igraph(in).b(holdoverGaps(holdoverGaps > 0)), igraph(ig).b(holdoverGaps > 0)); %Scenario #3
-                            igraph(ig).neighbors = [igraph(ig).neighbors in];
-                            igraph(ig).neighborsCost = [igraph(ig).neighborsCost graph(g).neighborsCost(graph(g).neighbors == n)];
-                        end
-                    end
-                end
-            else
-                % A gap Edge disappeared
-                holdoverGaps = findHoldoverGaps(g, n, graph, world, epsilon, snap_distance);
-                for ig =  iList([igraph.i] == g);
-                    for in =  iList([igraph.i] == n);
-                        if isequal(igraph(ig).b(holdoverGaps(holdoverGaps > 0)), igraph(in).b(holdoverGaps > 0)); %None of the important scenarios occured
-                            igraph(ig).neighbors = [igraph(ig).neighbors in];
-                            igraph(ig).neighborsCost = [igraph(ig).neighborsCost graph(g).neighborsCost(graph(g).neighbors == n)];
-                        end
-                    end
-                end  
-            end
-        else
-            % Just keep the same values of the gap edges through the
-            % transition
-            holdoverGaps = findHoldoverGaps(g, n, graph, world, epsilon, snap_distance);
-            for ig =  iList([igraph.i] == g);
-                for in =  iList([igraph.i] == n);
-                    if isequal(igraph(ig).b(holdoverGaps(holdoverGaps > 0)), igraph(in).b(holdoverGaps > 0)); %None of the important scenarios occured
-                        igraph(ig).neighbors = [igraph(ig).neighbors in];
-                        igraph(ig).neighborsCost = [igraph(ig).neighborsCost graph(g).neighborsCost(graph(g).neighbors == n)];
-                    end
-                end
-            end              
-        end
+        ids = examineTransition(g, n, graph, world);
+        igraph = directGraph(g, n, ids, graph, igraph);    
     end
 end
 igraph(1).graph = graph;

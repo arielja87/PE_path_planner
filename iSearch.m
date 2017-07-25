@@ -7,6 +7,9 @@ used_idx = 0;
 igraph(idxStart).g = 0;
 tic
 while ~isempty(pq)
+    if used_idx == 25000;
+        disp('Still thinking...')
+    end
     used_idx = used_idx+1;
     [current_node, pq] = priorityMinPop(pq);
     used(used_idx) = current_node;
@@ -55,8 +58,9 @@ toc
 
     function costs = getCosts(idxExpand, igraph)
         total_dists = [igraph(idxExpand).g];
-        sums = cellfun(@sum, {igraph(idxExpand).b});
-        costs = total_dists + sums;
+        num_ones = cellfun(@sum, {igraph(idxExpand).b});
+        num_zeros = cellfun(@(x) sum(x == 0), {igraph(idxExpand).b});
+        costs = total_dists + num_ones./total_dists - num_zeros./total_dists;
     end
 end
 

@@ -16,7 +16,7 @@ while ~isempty(edgeQueue)
     edgeQueue = removeRegionEdges(regionBoundary, edgeQueue);
     newRegion = unique(vertcat(regionBoundary{:}), 'rows');
     k = convhull(newRegion(:,1), newRegion(:,2));
-    regions = [regions newRegion(k,:)];
+    regions = [regions newRegion(k(1:end-1),:)];
 %     patch(regions{end}(:,1), regions{end}(:,2), 'b', 'facealpha', .5)
 %     pause(.5)
     
