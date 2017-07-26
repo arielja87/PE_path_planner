@@ -21,8 +21,9 @@ edges = makeEdges(vertices);
 indeces = 1:length(vertices(:,1));
 indeces(end) = 1;
 world = struct('indeces', {indeces}, 'vertices', {vertices}, 'edges', {edges});
-save world.mat world
-clf 
+set(gcf, 'Units', 'normalized', 'Position',[.55,.25,.4,.5],'Toolbar','none',...
+                'MenuBar','none', 'name', 'Pursuit Evasion Path Planner', 'NumberTitle', 'off');
+clf
 drawWorld(world.vertices)
 end
     
