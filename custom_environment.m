@@ -1,7 +1,7 @@
 function vertices = custom_environment
 % RANDOM_ENVIRONMENT allows a user to click points on a set of axes to 
 % create polygonal environment
-%% Draw axes and buttons
+%% Draw axes and get click points
 close all
 clc
 figure('Units', 'normalized', 'Position',[.55,.25,.4,.5],'Toolbar','none',...
@@ -70,7 +70,7 @@ while true
     end
 end
 
-% check if polygon is counter-clockwise
+%% check if polygon is counter-clockwise
 edges = [edges(end) edges edges(1)];
 s = 0;
 for i = 2:numel(edges)-1
@@ -78,10 +78,8 @@ for i = 2:numel(edges)-1
 end
 
 if sign(s) < 0
-    vertices = round(flipud(vertices),4);
-elseif sign(s) > 0
-    vertices = round(vertices, 4);
-else
+    vertices = flipud(vertices);
+elseif sign(s) == 0
     ME = MException('VerifyOutput:OutOfBounds', ...
     'Literally, what have you done!?');
     throw(ME);

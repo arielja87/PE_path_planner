@@ -7,7 +7,7 @@ xPoints = [intxOut.intMatrixX(intxOut.intAdjacencyMatrix) intxOut.intMatrixY(int
 % get intersections of all conservative lines with the world edges
 intxOut = lineSegmentIntersect(conservativeLines, world.edges);
 xPoints = [xPoints; intxOut.intMatrixX(intxOut.intAdjacencyMatrix) intxOut.intMatrixY(intxOut.intAdjacencyMatrix); world.vertices; cell2mat(conservativeLines')];
-xPoints = unique(round(xPoints,5), 'rows');
+xPoints = unique(round(xPoints,6), 'rows');
 % plot(xPoints(:,1), xPoints(:,2), 'k*');
 
 %divide world edges into segments based on conservative line intersections
@@ -28,26 +28,24 @@ for i = 1:numel(allEdges)
             if i <= numel(world.edges)
                 in(n) = false;
                 n = n+1;
-%                 plot(regionEdges{n-1}(:,1), regionEdges{n-1}(:,2), 'r')
+%                 plot(regionEdges{n-1}(:,1), regionEdges{n-1}(:,2), 'r');pause(1);
             else
                 in(n) = true;
                 n = n+1;
-%                 plot(regionEdges{n-1}(:,1), regionEdges{n-1}(:,2), 'g')                
+%                 plot(regionEdges{n-1}(:,1), regionEdges{n-1}(:,2), 'g');pause(1);               
             end
-%             pause(.1)
         end
     else 
         regionEdges(n) = allEdges(i);
         if i <= numel(world.edges)
             in(n) = false;
             n = n+1;
-%             plot(regionEdges{n-1}(:,1), regionEdges{n-1}(:,2), 'r')
+%             plot(regionEdges{n-1}(:,1), regionEdges{n-1}(:,2), 'r');pause(1);               
         else
             in(n) = true;
             n = n+1;
-%             plot(regionEdges{n-1}(:,1), regionEdges{n-1}(:,2), 'g')            
+%             plot(regionEdges{n-1}(:,1), regionEdges{n-1}(:,2), 'g');pause(1);                           
         end
-%         pause(.1)
     end 
 end
 

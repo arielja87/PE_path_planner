@@ -2,7 +2,7 @@ function regionBoundary = findRegionBoundary(edge, orientation, regionEdges)
 % takes an initial edge and orientation and finds a shortest closed loop
 % from other conservative edges in regionEdges
 
-persistent firstEdge boundary %b
+persistent firstEdge boundary % b
 if isempty(boundary)
     boundary = {edge};
 %     v = edge(2,:) - edge(1,:);

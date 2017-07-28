@@ -8,7 +8,7 @@ for i = 1:numel(path)-1
         path_dir = vpath/norm(vpath);
         for inc = 0:.1:round(v_length,2)
             vp = drawVisibility(x(1)+inc*path_dir(1), x(2)+inc*path_dir(2), {world.vertices}, .0000001, .005);
-            pause(.001)
+            pause(.005)
         end        
     else
         vpath = igraph(path(i+1)).x - igraph(path(i)).x;
@@ -16,7 +16,7 @@ for i = 1:numel(path)-1
         path_dir = vpath/norm(vpath);
         for inc = 0:.1:round(v_length,2)
             vp = drawVisibility(igraph(path(i)).x(1)+inc*path_dir(1), igraph(path(i)).x(2)+inc*path_dir(2), {world.vertices}, .0000001, .005);
-            pause(.001)
+            pause(.005)
         end        
     end
 end

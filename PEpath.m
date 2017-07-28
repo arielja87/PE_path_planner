@@ -4,7 +4,7 @@ clc
 clear
 format compact
 world = -1;
-while isequal(world,-1);
+while isequal(world,-1)
     fprintf('\nList of valid environment files:\n\n')
     fList = ls('*.dat');
     for i = 1:numel(fList(:,1))
@@ -16,7 +16,7 @@ while isequal(world,-1);
         filename = 'custom_env.dat';
         save(filename, 'v', '-ascii');
     else
-        if isempty(strfind(filename, '.dat'))
+        if ~contains(filename, '.dat')
             filename = strcat(filename, '.dat');
         end
     end
@@ -34,7 +34,8 @@ l = line(cLinesMat(:,1:2:end), cLinesMat(:,2:2:end), 'color', [.5 .5 1]);
 %% Conservative regions
 [regionEdges, in] = separateEdges(conservativeLines, world);
 regions = make_conservativeRegions(regionEdges, in, world);
-input('Press "Enter" to continue...')
+%commandwindow
+input('Press "Enter" to continue...');
 clc
 fprintf(['Separating the environment into "conservative regions," within which'...
     ' the gap edges\nof the visibility polygon don''t provide new information...\n']);
@@ -51,12 +52,14 @@ points = regionCenters(regions);
 % plot
 c = plot(points(:,1), points(:,2), 'k.', 'visible', 'off');
 
-[h,graph] = points2graphFast(points, regionEdges(in), world);
-input('Press "Enter" to continue...')
+[h,ugraph] = points2graphFast(points, regionEdges(in), world);
+%commandwindow
+input('Press "Enter" to continue...');
 clc
 fprintf('Connecting the centers of conservative regions into an undirected graph...\n')
 set(h, 'Visible', 'on');set(c, 'Visible', 'on');
-input('Press "Enter" to continue...')
+%commandwindow
+input('Press "Enter" to continue...');
 clc
 delete(l)
 delete(p)
@@ -64,7 +67,16 @@ delete(p)
 disp(['Creating a directed information graph by examining the transitions between'...
     ' conservative regions...'])
 % t = plotIndeces(graph);
-igraph = informationGraph(graph, world);
+[igraph, di_graph] = informationGraph(ugraph, world);
+env_fig = gcf;
+dig_fig = figure('Units', 'normalized', 'Position',[.15,.25,.4,.5],'Toolbar','none',...
+                'MenuBar','none', 'name', 'Directed Information Graph', 'NumberTitle', 'off', 'color', [1 1 1], 'visible', 'off');
+axis off square equal
+hold on
+if numel(igraph) < 500
+    plot(di_graph);
+    set(dig_fig, 'visible', 'on');
+end
 fprintf('The superimposed directed information graph contains %d nodes.\n', numel(igraph))
 g = igraph(1).graph;
 %% Path generation
@@ -74,6 +86,7 @@ while true
     vp = [];
     pathHandle = [];
     key = 'a';
+    figure(env_fig)
     % Get user input for starting position
     while ~inpolygon(x(1), x(2), world.vertices(:,1), world.vertices(:,2))
         disp('Use the mouse to select a starting position...')
@@ -90,9 +103,9 @@ while true
     s = plot(x(1), x(2), 'k.', 'markersize', 25);
     set(c, 'Visible', 'off');drawnow;
     % Generate Path
-    path = iSearch(igraph, idxStart);
+    path = di_search(di_graph, igraph, idxStart);
     while strcmpi(key, 'a')
-        if path == -1
+        if isempty(path)
             disp('No complete path found. This environment requires additional pursuers.')
         else
             pathHandle = plotPath(path, igraph, x);
@@ -105,6 +118,7 @@ while true
             a_count = 1;
         end
         set(h, 'Visible', 'on');set(c, 'Visible', 'on');drawnow;
+        %commandwindow;
         key = input('\nPress "Enter" to choose a new starting location,\n"A" to animate the path again,\n"N" to load a new environment,\n"Q" to quit: ', 's');
         if strcmpi(key, 'n')
             PEpath

@@ -7,7 +7,7 @@ used_idx = 0;
 igraph(idxStart).g = 0;
 tic
 while ~isempty(pq)
-    if used_idx == 25000;
+    if used_idx == 25000
         disp('Still thinking...')
     end
     used_idx = used_idx+1;
