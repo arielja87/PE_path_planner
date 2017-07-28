@@ -17,7 +17,7 @@ end
 if ~isequal(vertices(end,:), vertices(1,:))
     vertices(end+1,:) = vertices(1,:);
 end
-vertices = round(vertices,6);
+vertices = round(vertices,2);
 edges = makeEdges(vertices);
 indeces = 1:length(vertices(:,1));
 indeces(end) = 1;

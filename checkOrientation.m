@@ -5,7 +5,7 @@ function orientation = checkOrientation(edge, regions, world)
 %     persistent h
     mp = midpoints({edge});
     lineDir = (edge(2,:) - edge(1,:))/norm(edge(2,:) - edge(1,:));
-    orthoDir = lineDir*0.00001*[0 -1;1 0];
+    orthoDir = lineDir*0.00000001*[0 -1;1 0];
     p(1,:) = mp + orthoDir;
     p(2,:) = mp - orthoDir;
 %     delete(h)

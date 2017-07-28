@@ -73,7 +73,7 @@ dig_fig = figure('Units', 'normalized', 'Position',[.15,.25,.4,.5],'Toolbar','no
                 'MenuBar','none', 'name', 'Directed Information Graph', 'NumberTitle', 'off', 'color', [1 1 1], 'visible', 'off');
 axis off square equal
 hold on
-if numel(igraph) < 500
+if numel(igraph) < 1000
     plot(di_graph);
     set(dig_fig, 'visible', 'on');
 end
@@ -93,11 +93,6 @@ while true
         x = ginput(1);
     end
     disp('Searching for a shortest complete path...')
-    if numel(igraph) > 2000
-        disp('This may take several minutes...')
-    elseif numel(igraph) > 1000 
-        disp('This may take about a minute')
-    end
     gIdx = findNearestNode(x, g, world);
     idxStart = g(gIdx).ii(end);
     s = plot(x(1), x(2), 'k.', 'markersize', 25);
