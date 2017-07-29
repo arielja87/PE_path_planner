@@ -35,17 +35,16 @@ if ~isempty(ugraph(g).gv) && ~isempty(ugraph(n).gv)
 %             ugraph(g).gv
 %             n
 %             ugraph(n).gv
-            conditions = [all(m_vec);
-                          all(s_vec);
-                          isequal(igraph(ig).b(parent_holdovers), igraph(in).b(child_holdovers));
-                          all(igraph(in).b(ids.backward_idx == 0) == 0)];
-            if all(conditions)
+            if all(m_vec) &&...
+                            all(s_vec) &&...
+                            isequal(igraph(ig).b(parent_holdovers), igraph(in).b(child_holdovers)) &&...
+                            all(igraph(in).b(ids.backward_idx == 0) == 0)
 %                 igraph(ig).neighbors = [igraph(ig).neighbors in];
 %                 igraph(ig).neighborsCost = [igraph(ig).neighborsCost ugraph(g).neighborsCost(ugraph(g).neighbors == n)];
                 n_dist = ugraph(g).neighborsCost(ugraph(g).neighbors == n);
-                cost = max(n_dist + sum(igraph(in).b)/n_dist - sum(~igraph(in).b)/n_dist, .000001);
+%                 cost = max(n_dist + sum(igraph(in).b)/n_dist - sum(~igraph(in).b)/n_dist, .000001);
 %                 disp([ig in]);pause(1)
-                g_mat(ig,in) = cost;
+                g_mat(ig,in) = n_dist;
             end
         end
     end

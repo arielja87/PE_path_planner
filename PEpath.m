@@ -1,11 +1,11 @@
 %% Setup Environment
-close all
+% close all
 clc
 clear
 format compact
 world = -1;
 while isequal(world,-1)
-    fprintf('\nList of valid environment files:\n\n')
+    fprintf('List of valid environment files:\n\n')
     fList = ls('*.dat');
     for i = 1:numel(fList(:,1))
         disp(fList(i,:))
@@ -23,49 +23,51 @@ while isequal(world,-1)
     world = create_environment(filename);drawnow;
 end
 %% Conservative Lines
-fprintf(['\nExtending rays from all edges into free space\nand away'...
-' from interior points between which is a clear line of sight, and'...
+clc
+fprintf(['Extending rays from all edges into free space\nand away'...
+' from interior corners between which is a clear line of sight, and'...
 ' outside of which is free space...\n'])
 conservativeLines = make_conservativeLines(world);
 % plot
 cLinesMat = cell2mat(conservativeLines);
 l = line(cLinesMat(:,1:2:end), cLinesMat(:,2:2:end), 'color', [.5 .5 1]);
-
-%% Conservative regions
-[regionEdges, in] = separateEdges(conservativeLines, world);
-regions = make_conservativeRegions(regionEdges, in, world);
 %commandwindow
 input('Press "Enter" to continue...');
 clc
-fprintf(['Separating the environment into "conservative regions," within which'...
-    ' the gap edges\nof the visibility polygon don''t provide new information...\n']);
-% plot
-col='ymcrgbk';
-p = zeros(1,numel(regions));
-for r = 1:numel(regions)
-    p(r) = patch(regions{r}(:,1), regions{r}(:,2), col(mod(r,7)+1), 'faceAlpha', .2);
-end
-    
-%% Undirected graph
+%% Conservative regions
+fprintf(['Separating the environment into "conservative regions," within which\n'...
+    'the contamination of the gap edges of the visibility polygon is constant.\n'...
+    'Since every point within these conservative regions has the same B values,\n'...
+    'it is only necessary to visit one point in each region.\n'...
+    'For simplicity, we choose the centers...\n']);
+[regionEdges, in, xPoints] = separateEdges(conservativeLines, world);
+% environmentGraph(regionEdges, in, xPoints)
+regions = make_conservativeRegions(regionEdges, in, world);
 world.regionEdges = regionEdges;
 points = regionCenters(regions);
 % plot
-c = plot(points(:,1), points(:,2), 'k.', 'visible', 'off');
-
+c = plot(points(:,1), points(:,2), 'k.');
+% col='ymcrgbk';
+% p = zeros(1,numel(regions));
+% for r = 1:numel(regions)
+%     p(r) = patch(regions{r}(:,1), regions{r}(:,2), col(mod(r,7)+1), 'faceAlpha', .2);
+% end
+%commandwindow
+input('Press "Enter" to continue...');
+clc
+%% Undirected graph
+fprintf('Connecting the centers of adjacent conservative regions into an undirected graph...\n')
 [h,ugraph] = points2graphFast(points, regionEdges(in), world);
+% plot
+set(h, 'Visible', 'on')
 %commandwindow
 input('Press "Enter" to continue...');
 clc
-fprintf('Connecting the centers of conservative regions into an undirected graph...\n')
-set(h, 'Visible', 'on');set(c, 'Visible', 'on');
-%commandwindow
-input('Press "Enter" to continue...');
-clc
-delete(l)
-delete(p)
+set(l, 'visible', 'off')
+% delete(p)
 %% Information graph
-disp(['Creating a directed information graph by examining the transitions between'...
-    ' conservative regions...'])
+fprintf(['Creating a directed information graph by examining the transitions\nbetween'...
+    ' conservative regions...\n'])
 % t = plotIndeces(graph);
 [igraph, di_graph] = informationGraph(ugraph, world);
 env_fig = gcf;

@@ -1,4 +1,4 @@
-function [regionEdges, in] = separateEdges(conservativeLines, world)
+function [regionEdges, in, xPoints] = separateEdges(conservativeLines, world)
 %% conservative region test script
 % get intersections of all conservative lines with themselves
 intxOut = lineSegmentIntersect(conservativeLines, conservativeLines);
