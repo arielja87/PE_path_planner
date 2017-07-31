@@ -17,7 +17,7 @@ s = unique(s(s>0));
 % split, where the gap is present in both visibility polygons
 
 child_in_both = ids.backward_idx>0;
-
+nList = [];
 if ~isempty(ugraph(g).gv) && ~isempty(ugraph(n).gv)
     parent_holdovers = ids.backward_idx(child_in_both & ~ismember(ids.backward_idx,s) & ~merge_child);
     child_holdovers = ids.forward_idx(parent_holdovers);
@@ -45,6 +45,7 @@ if ~isempty(ugraph(g).gv) && ~isempty(ugraph(n).gv)
 %                 cost = max(n_dist + sum(igraph(in).b)/n_dist - sum(~igraph(in).b)/n_dist, .000001);
 %                 disp([ig in]);pause(1)
                 g_mat(ig,in) = n_dist;
+                nList = [nList [ig;in]];
             end
         end
     end
@@ -52,7 +53,7 @@ elseif ~isempty(ugraph(g).gv)
 %     [igraph(ugraph(g).ii).neighbors] = deal([ugraph(n).ii]);
 %     [igraph(ugraph(g).ii).neighborsCost] = deal(ugraph(g).neighborsCost(ugraph(g).neighbors == n));
 %     n_dist = ugraph(g).neighborsCost(ugraph(g).neighbors == n);
-    cost = .000001;
-    g_mat(ugraph(g).ii,ugraph(n).ii) = cost;
+    g_mat(ugraph(g).ii,ugraph(n).ii) = .0000001;
 end
+nList
 end

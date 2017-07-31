@@ -1,4 +1,4 @@
-function [igraph, di_graph] = informationGraph(graph, world)
+function [igraph, di_graph] = informationGraph(ugraph, world)
 %% Constructs a directed information graph from a visibility graph
 
 %Robustness constant
@@ -14,9 +14,9 @@ igraph(1) = [];
 %% first loop: initialize information graph
 
 intPoints = findInteriorPoints(world);
-for g = 1:numel(graph)
+for g = 1:numel(ugraph)
     %Obtain the visibility polygon for current graph node
-    vp = visibility_polygon( [graph(g).x(1) graph(g).x(2)] , {world.vertices} , epsilon , snap_distance );
+    vp = visibility_polygon( [ugraph(g).x(1) ugraph(g).x(2)] , {world.vertices} , epsilon , snap_distance );
 %     h = patch( vp(:,1) , vp(:,2) , 0.1*ones( size(vp,1) , 1 ) , ...
 %            'r' , 'linewidth' , 1.5, 'FaceColor' , [.65 1 .65], 'faceAlpha', .5);
     
@@ -24,18 +24,18 @@ for g = 1:numel(graph)
     vpEdges = makeEdges(vp);
 %     vpEdges{:}
     %Determine which edges are gap edges and count them
-    gapEdges = findGapEdges(vpEdges, graph(g).x, world);
+    gapEdges = findGapEdges(vpEdges, ugraph(g).x, world);
     nGaps = numel(gapEdges);
 %     gapEdges{:}
     
     %Create a node in the information graph for every possible combination
     %of gap edges, b vector
     idx = numel(igraph)+1:numel(igraph)+2^nGaps;
-    [igraph(idx).x] = deal(graph(g).x);
-    graph(g).ii = idx;
+    [igraph(idx).x] = deal(ugraph(g).x);
+    ugraph(g).ii = idx;
     
     %Put gap edges in graph
-    graph(g).gapEdges = gapEdges;
+    ugraph(g).gapEdges = gapEdges;
 
     %Make cell array of all possble b vectors containing contamination of
     %edge specified by igraph.gv
@@ -50,7 +50,7 @@ for g = 1:numel(graph)
     
     gv = findGapVertices(gapEdges, intPoints);
     [igraph(idx).gv] = deal(gv);    
-    graph(g).gv = gv;
+    ugraph(g).gv = gv;
     
     %Attach the index of the visibility graph to each superimposed node of
     %the information graph for reference
@@ -67,12 +67,12 @@ end
 % 4. a gap-edge divides into multiple gap-edges, assign the new edges the same label as the original;
 
 g_mat = zeros(numel(igraph));
-for g = 1:numel(graph)
-    for n = graph(g).neighbors
-        ids = examineTransition(g, n, graph, world);
-        [igraph, g_mat] = directGraph(g, n, ids, graph, igraph, g_mat);    
+for g = 1:numel(ugraph)
+    for n = ugraph(g).neighbors
+        ids = examineTransition(g, n, ugraph, world);
+        g_mat = directGraphMat(g, n, ids, ugraph, igraph, g_mat); 
     end
 end
 di_graph = digraph(g_mat);
-igraph(1).graph = graph;
+igraph(1).graph = ugraph;
 end

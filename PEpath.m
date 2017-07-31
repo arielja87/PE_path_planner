@@ -57,7 +57,7 @@ input('Press "Enter" to continue...');
 clc
 %% Undirected graph
 fprintf('Connecting the centers of adjacent conservative regions into an undirected graph...\n')
-[h,ugraph] = points2graphFast(points, regionEdges(in), world);
+[h,ugraph] = points2graph(points, regionEdges);
 % plot
 set(h, 'Visible', 'on')
 %commandwindow
@@ -75,7 +75,7 @@ dig_fig = figure('Units', 'normalized', 'Position',[.15,.25,.4,.5],'Toolbar','no
                 'MenuBar','none', 'name', 'Directed Information Graph', 'NumberTitle', 'off', 'color', [1 1 1], 'visible', 'off');
 axis off square equal
 hold on
-if numel(igraph) < 1000
+if numel(igraph) < 2000
     plot(di_graph);
     set(dig_fig, 'visible', 'on');
 end
