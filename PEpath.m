@@ -7,7 +7,7 @@ world = -1;
 while isequal(world,-1)
     fprintf('List of valid environment files:\n\n')
     fList = ls('*.dat');
-    for i = 1:numel(fList(:,1))
+    for i = 1:size(fList,1)
         disp(fList(i,:))
     end
     filename = input('\nEnter the name of the file to use or press "C" to create your own environment: ', 's');
@@ -57,7 +57,7 @@ input('Press "Enter" to continue...');
 clc
 %% Undirected graph
 fprintf('Connecting the centers of adjacent conservative regions into an undirected graph...\n')
-[h,ugraph] = points2graph(points, regionEdges, regions);
+[h,ugraph] = points2graph(points, regions, world);
 % plot
 set(h, 'Visible', 'on')
 %commandwindow

@@ -1,14 +1,13 @@
 function [regionEdges, in, xPoints] = separateEdges(conservativeLines, world)
-%% conservative region test script
+%% Separate all edges into edges of conservative regions
 % get intersections of all conservative lines with themselves
 intxOut = lineSegmentIntersect(conservativeLines, conservativeLines);
 xPoints = [intxOut.intMatrixX(intxOut.intAdjacencyMatrix) intxOut.intMatrixY(intxOut.intAdjacencyMatrix)];
-% plot(xPoints(:,1), xPoints(:,2), 'k*');
+
 % get intersections of all conservative lines with the world edges
 intxOut = lineSegmentIntersect(conservativeLines, world.edges);
 xPoints = [xPoints; intxOut.intMatrixX(intxOut.intAdjacencyMatrix) intxOut.intMatrixY(intxOut.intAdjacencyMatrix); world.vertices; cell2mat(conservativeLines')];
 xPoints = unique(round(xPoints,6), 'rows');
-% plot(xPoints(:,1), xPoints(:,2), 'k*');
 
 %divide world edges into segments based on conservative line intersections
 allEdges = [world.edges conservativeLines];
@@ -21,7 +20,6 @@ for i = 1:numel(allEdges)
         edgePoints = xPoints(flags,:);
         dists = dist([allEdges{i}(1,:)', edgePoints']);
         [~,idx] = sort(dists(1,2:end));
-        
         edgePoints = [allEdges{i}(1,:); edgePoints(idx,:); allEdges{i}(2,:)];
         for j = 1:length(edgePoints(:,1))-1
             regionEdges{n} = [edgePoints(j,:); edgePoints(j+1,:)];
