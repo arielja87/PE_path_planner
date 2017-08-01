@@ -24,6 +24,13 @@ while isequal(world,-1)
 end
 %% Conservative Lines
 clc
+k = convhull(world.vertices);
+if isequal(world.vertices, world.vertices(k,:))
+    disp('This is the trivial case. All points are visible from every point in the environment.')
+    input('Press "Enter" to continue...');
+    PEpath
+    return
+end
 fprintf(['Extending rays from all edges into free space\nand away'...
 ' from interior corners between which is a clear line of sight, and'...
 ' outside of which is free space...\n'])
@@ -75,7 +82,7 @@ dig_fig = figure('Units', 'normalized', 'Position',[.15,.25,.4,.5],'Toolbar','no
                 'MenuBar','none', 'name', 'Directed Information Graph', 'NumberTitle', 'off', 'color', [1 1 1], 'visible', 'off');
 axis off square equal
 hold on
-if numel(igraph) < 2000
+if numel(igraph) < 100
     plot(di_graph);
     set(dig_fig, 'visible', 'on');
 end

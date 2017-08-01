@@ -21,7 +21,7 @@ function orientation = checkOrientation(edge, regions, world)
             orientation = 1;   
         end
     elseif sum(in) == 2
-        if ~isempty(regions)
+        if ~all(cellfun('isempty',regions))
             p = freePoint(p, regions);
             v = [p - edge(1,:), 0];
             k = cross(v, [lineDir, 0]);
@@ -35,7 +35,7 @@ function orientation = checkOrientation(edge, regions, world)
         end
     else
         ME = MException('VerifyOutput:OutOfBounds', ...
-        'first edge was not along boundary');
+        'First edge was not along boundary');
         throw(ME);
     end
 end

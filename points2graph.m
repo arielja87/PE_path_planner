@@ -7,7 +7,7 @@ ci = 1:size(points,1);
 for i = ci
     graph(i).x = points(i,:);
 %     c = plot(points(i,1), points(i,2), 'r*', 'markersize', 10);
-    x_edges = makeEdges(regions{i});
+    x_edges = makeEdges(unique(round(regions{i},5), 'rows', 'stable'));
     in = edgeInOn(x_edges, world);
     n_neighbors = sum(in);
     c_dists = dist([points(i,:)' points(ci~=i,:)']);
@@ -20,7 +20,7 @@ for i = ci
     while n_linked < n_neighbors
         checked_i = checked_i + 1;
         nIdx = ids(checked_i);
-        if sum(ismember(regions{i}, regions{nIdx}, 'rows')) == 2
+        if sum(ismember(unique(round(regions{i},5), 'rows'), unique(round(regions{nIdx},5), 'rows'), 'rows')) == 2
 %             b(n_linked+1) = plot(points(nIdx,1), points(nIdx,2), 'b.', 'markersize', 15);
             h(n) = line(points([i nIdx],1), points([i nIdx],2), [.2 .2], 'color', 'red', 'Visible', 'off');
             n=n+1;

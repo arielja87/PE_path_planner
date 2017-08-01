@@ -1,10 +1,11 @@
 function out = freePoint(p, regions)
-flag1 = false(numel(regions),1);
-flag2 = false(numel(regions),1);
-for i = 1:numel(regions)
+num_regions = sum(~cellfun('isempty', regions));
+flag1 = false(num_regions,1);
+flag2 = false(num_regions,1);
+for i = 1:num_regions
     flag1(i) = inpolygon(p(1,1), p(1,2), regions{i}(:,1), regions{i}(:,2));
 end
-for i = 1:numel(regions)
+for i = 1:num_regions
     flag2(i) = inpolygon(p(2,1), p(2,2), regions{i}(:,1), regions{i}(:,2));
 end
 flag1 = any(flag1);
