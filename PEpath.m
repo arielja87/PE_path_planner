@@ -57,7 +57,7 @@ input('Press "Enter" to continue...');
 clc
 %% Undirected graph
 fprintf('Connecting the centers of adjacent conservative regions into an undirected graph...\n')
-[h,ugraph] = points2graph(points, regionEdges);
+[h,ugraph] = points2graph(points, regionEdges, regions);
 % plot
 set(h, 'Visible', 'on')
 %commandwindow

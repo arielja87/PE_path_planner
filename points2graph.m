@@ -1,10 +1,11 @@
-function [h, graph] = points2graph(points, regionEdges)
-s = struct('neighbors', [], 'neighborsCost', [], 'g', [], 'backpointer', [], 'x', [], 'b', [], 'gv', []);
+function [h, graph] = points2graph(points, regionEdges, regions)
+s = struct('neighbors', [], 'neighborsCost', [], 'x', [], 'b', [], 'gv', []);
 graph = repmat(s,length(points(:,1)),1);
 n = 1;
 h = zeros(1,numel(points)*2);
 for i = 1:length(points(:,1))
-    graph(i).x = points(i,:);   
+    graph(i).x = points(i,:);
+    num_
     for j = 1:length(points(:,1))
         testEdge = [points(i,:); points(j,:)];
         out = lineSegmentIntersect({testEdge}, regionEdges);

@@ -8,7 +8,7 @@ epsilon = 0.00000000001;
 %boundary before the visibility polygon is computed)
 snap_distance = 0.0001;
 
-igraph = struct('neighbors', [], 'neighborsCost', [], 'g', [], 'backpointer', [], 'x', [], 'b', [], 'gv', [], 'i', []);
+igraph = struct('x', [], 'b', [], 'gv', [], 'i', []);
 igraph(1) = [];
 
 %% first loop: initialize information graph
@@ -66,7 +66,7 @@ end
 % 3. two or more gap-edges merge into one, if any of them had a one label, assign a one to the new edge;
 % 4. a gap-edge divides into multiple gap-edges, assign the new edges the same label as the original;
 
-g_mat = zeros(numel(igraph));
+g_mat = zeros(numel(igraph), 'single');
 for g = 1:numel(ugraph)
     for n = ugraph(g).neighbors
         ids = examineTransition(g, n, ugraph, world);
