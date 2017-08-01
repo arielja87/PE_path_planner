@@ -76,7 +76,11 @@ set(l, 'visible', 'off')
 fprintf(['Creating a directed information graph by examining the transitions\nbetween'...
     ' conservative regions...\n'])
 % t = plotIndeces(graph);
-[igraph, di_graph] = informationGraph(ugraph, world);
+% Initialize igraph
+[igraph, ugraph] = igraph_init(ugraph, world);
+% Build directed information graph
+di_graph = directGraphMat(igraph, ugraph, world);
+
 env_fig = gcf;
 dig_fig = figure('Units', 'normalized', 'Position',[.15,.25,.4,.5],'Toolbar','none',...
                 'MenuBar','none', 'name', 'Directed Information Graph', 'NumberTitle', 'off', 'color', [1 1 1], 'visible', 'off');
@@ -87,7 +91,6 @@ if numel(igraph) < 100
     set(dig_fig, 'visible', 'on');
 end
 fprintf('The superimposed directed information graph contains %d nodes.\n', numel(igraph))
-g = igraph(1).graph;
 %% Path generation
 x = [inf inf];
 while true
@@ -102,8 +105,8 @@ while true
         x = ginput(1);
     end
     disp('Searching for a shortest complete path...')
-    gIdx = findNearestNode(x, g, world);
-    idxStart = g(gIdx).ii(end);
+    gIdx = findNearestNode(x, ugraph, world);
+    idxStart = ugraph(gIdx).ii(end);
     s = plot(x(1), x(2), 'k.', 'markersize', 25);
     set(c, 'Visible', 'off');drawnow;
     % Generate Path
