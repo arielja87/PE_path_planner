@@ -2,7 +2,8 @@ function world = create_environment(filename)
 
 fid = fopen(filename);
 if fid == -1
-    fprintf('\nCould not find that file, make sure the extension is included.\n\n')
+    clc
+    fprintf('Could not find that file, try again.\n\n')
     world = -1;
     return
 else
