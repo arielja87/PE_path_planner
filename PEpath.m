@@ -3,7 +3,6 @@
 clc
 clear
 format compact
-terv_msg = 'Quit fuckin'' around, Travis!';
 world = -1;
 while isequal(world,-1)
     fprintf('List of valid environment files:\n\n')
@@ -28,27 +27,21 @@ clc
 k = convhull(world.vertices);
 if isequal(world.vertices, world.vertices(k,:))
     disp('This is the trivial case. All points are visible from every point in the environment.')
-    try
-        input('Press "Enter" to continue...');
-    catch
-        disp(terv_msg)
-        pause(2)
-    end    
+    input('Press "Enter" to continue...', 's');
     PEpath
     return
 end
-fprintf(['Extending rays from all edges into free space and away'...
-' from interior corners,\nbetween which is a clear line of sight, and'...
+fprintf(['Extending rays from all edges into free space\nand away'...
+' from interior corners between which is a clear line of sight, and'...
 ' outside of which is free space...\n'])
 conservativeLines = make_conservativeLines(world);
 % plot
 cLinesMat = cell2mat(conservativeLines);
 l = line(cLinesMat(:,1:2:end), cLinesMat(:,2:2:end), 'color', [.5 .5 1]);
 %commandwindow
-try
-    input('Press "Enter" to continue...');
-catch
-    disp(terv_msg)
+terv = input('Press "Enter" to continue...', 's');
+if any(ismember('`~@#$%^&*()_+-=[]{}\|;:"/?.>,<', terv))
+    disp('Quit fuckin'' around, Travis')
     pause(2)
 end
 clc
@@ -71,12 +64,7 @@ c = plot(points(:,1), points(:,2), 'k.');
 %     p(r) = patch(regions{r}(:,1), regions{r}(:,2), col(mod(r,7)+1), 'faceAlpha', .2);
 % end
 %commandwindow
-try
-    input('Press "Enter" to continue...');
-catch
-    disp(terv_msg)
-    pause(2)
-end
+input('Press "Enter" to continue...', 's');
 clc
 %% Undirected graph
 fprintf('Connecting the centers of adjacent conservative regions into an undirected graph...\n')
@@ -84,12 +72,7 @@ fprintf('Connecting the centers of adjacent conservative regions into an undirec
 % plot
 set(h, 'Visible', 'on')
 %commandwindow
-try
-    input('Press "Enter" to continue...');
-catch
-    disp(terv_msg)
-    pause(2)
-end
+input('Press "Enter" to continue...', 's');
 clc
 set(l, 'visible', 'off')
 % delete(p)
@@ -121,7 +104,7 @@ while true
     key = 'a';
     figure(env_fig)
     % Get user input for starting position
-    while ~inpolygon(x(1), x(2), world.vertices(:,1), world.vertices(:,2))
+    while isempty(x) || ~inpolygon(x(1), x(2), world.vertices(:,1), world.vertices(:,2))
         disp('Use the mouse to select a starting position...')
         x = ginput(1);
     end
@@ -154,11 +137,11 @@ while true
         elseif strcmpi(key, 'q')
             clc;
             return
-        elseif ~contains('nqa', key)
+        elseif ~any(ismember('nqa', key))
             delete(vp);delete(pathHandle);
+            clc
+            disp('Use the mouse to select a starting position...')
             x = ginput(1);
-        else
-            disp(terv_msg)
         end
     delete(vp);delete(pathHandle);delete(s);
     clc
