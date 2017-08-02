@@ -7,7 +7,7 @@ clc
 figure('Units', 'normalized', 'Position',[.55,.25,.4,.5],'Toolbar','none',...
                 'MenuBar','none', 'name', 'Environment Builder', 'NumberTitle', 'off');
 ax = axes('XLimMode', 'manual', 'YLimMode', 'manual');
-set(ax, 'XLim', [-20 20], 'YLim', [-20 20]);
+set(ax, 'XLim', [-15 15], 'YLim', [-15 15]);
 % axis square equal
 hold on
 disp('Left click to make points, right click to build the environment, and middle click to start over...')
@@ -69,21 +69,6 @@ while true
         end
     end
 end
-
-%% check if polygon is counter-clockwise
 [v(:,1), v(:,2)] = poly2ccw(vertices(:,1), vertices(:,2));
-% edges = [edges(end) edges edges(1)];
-% s = 0;
-% for i = 2:numel(edges)-1
-%     s = s + checkCross(edges{i}, edges{i+1});
-% end
-% 
-% if sign(s) < 0
-%     vertices = flipud(vertices);
-% elseif sign(s) == 0
-%     ME = MException('VerifyOutput:OutOfBounds', ...
-%     'Literally, what have you done!?');
-%     throw(ME);
-% end
 clc
 end
