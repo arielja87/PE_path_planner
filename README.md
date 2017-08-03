@@ -3,7 +3,7 @@ A Matlab project for planning pursuit-evasion paths in planar simply connected p
 
 The implementation is based on the algorithm presented in this paper: http://robotics.stanford.edu/~latombe/cs326/2003/class16/pursuit-evasion.pdf
 
-A demonstration of the planner is compiled in PEpaths.exe file in the [Downloads folder](https://github.com/arielja87/PE_path_planner/blob/master/Downloads/PEpath.zip), where there are also several example environments.
+A demonstration of the planner is compiled in PEpaths.exe in a zip in the [Downloads folder](https://github.com/arielja87/PE_path_planner/blob/master/Downloads/PEpath.zip), where there are also several example environments.
 The demo also has a built-in environment builder.
 
 The Matlab Runtime 2017a (9.2) necessary to run PEpath.exe can be found here: https://www.mathworks.com/products/compiler/mcr.html.
