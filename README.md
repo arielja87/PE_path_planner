@@ -1,8 +1,10 @@
 # PE_path_planner
 A Matlab project for planning pursuit-evasion paths in planar simply connected polygonal environments
 
+The implementation is based on the algorithm presented in this paper: http://robotics.stanford.edu/~latombe/cs326/2003/class16/pursuit-evasion.pdf
+
 A demonstration of the planner is compiled in PEpaths.exe file in the Downloads folder, where there are also several example environments.
-Valid environments are a vertical list of points (x,y) that when read top to bottom, define a polygon counter-clockwise. This polygon must be non-self-intersecting and contain no holes. The program runs best when the lengths of the edges of the environment polygon are within an order of magnitude of 1 unit.
+The demo also has a built-in environment builder.
 
 The Matlab Runtime 2017a (9.2) necessary to run PEpath.exe can be found here: https://www.mathworks.com/products/compiler/mcr.html.
 
