@@ -27,5 +27,6 @@ set(gcf, 'Units', 'normalized', 'Position',[.55,.25,.4,.5],'Toolbar','none',...
                 'MenuBar','none', 'name', 'Pursuit Evasion Path Planner', 'NumberTitle', 'off');
 clf
 drawWorld(world.vertices)
+line(world.vertices(:,1), world.vertices(:,2), .31*ones(size(world.vertices,1), 1), 'color', 'k');
 end
     
